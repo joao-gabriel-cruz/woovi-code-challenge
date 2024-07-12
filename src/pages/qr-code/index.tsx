@@ -1,12 +1,12 @@
 import { CommonPage } from "../../components/common/common-page"
 
-export const Payment = () => {
+export const QRCode = () => {
   return (
     <CommonPage
-      title='João, pague o restante em 1x no cartão'
+      title='João, pague a entrada de R$ 15.300,00 pelo Pix'
     >
       <div>
-        <h1>Payment</h1>
+        <h1>QRCode</h1>
       </div>
     </CommonPage>
   )

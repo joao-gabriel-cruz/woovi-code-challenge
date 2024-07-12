@@ -9,12 +9,15 @@ import '@fontsource/roboto/700.css';
 import { ThemeProvider } from '@emotion/react';
 import { CssBaseline } from '@mui/material';
 import { theme } from './styles/theme.ts';
+import { PaymentProvider } from './context/payment-context.tsx';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <App />
-    </ThemeProvider>
+    <PaymentProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <App />
+      </ThemeProvider>
+    </PaymentProvider>
   </React.StrictMode>,
 )
