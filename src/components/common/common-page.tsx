@@ -27,7 +27,7 @@ export const CommonPage = (props: CommonPageProps) => {
         align='center'
         mt={4}
         mb={2}
-        fontSize={20}
+        fontSize={24}
       >
         {props.title}
       </Typography>

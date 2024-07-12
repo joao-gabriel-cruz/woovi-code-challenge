@@ -1,4 +1,4 @@
-import { format_money } from "../../utils/format-money"
+import { format_money } from "../../utils"
 
 interface HandleTypeInstallmentsProps {
   type: "installments" | "installments-text" | "total-value" | "installments-promotion"
@@ -46,6 +46,7 @@ export const InstallmentService = () => {
   }
 
   return {
-    handleTypeInstallments
+    handleTypeInstallments,
+    countFeesAndDiscount
   }
 }
