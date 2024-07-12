@@ -1,6 +1,7 @@
-import React from "react"
+import React, { useContext } from "react"
 import { Installment } from "../../@types/installments"
 import { styled } from "@mui/material"
+import { PaymentContext } from "../../context/payment-context"
 
 interface ConnectInstallmentsProps {
   installments: Installment[]
@@ -17,8 +18,7 @@ const ConnectInstallmentsBox = styled('div')`
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-
-  `
+`
 
 interface ConnectInstallmentsRadiosProps {
   checked: boolean
@@ -74,8 +74,23 @@ export const ConnectInstallmentsLabel = styled('span')`
 
 `
 
+export const ConnectInstallmentsContainerRadiosLabel = styled('div')`
+  display: flex;
+`
+
+export const ConnectInstallmentsTotal = styled('span')`
+    font-size: 0.8rem;
+    font-weight: 600;
+    font-family: 'Nunito' sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0.5rem;
+`
+
 export const ConnectInstallments = (props: ConnectInstallmentsProps) => {
   const { installments } = props
+  const { payment_value } = useContext(PaymentContext)
 
   const handleInstallment = (amount_installment: number) => {
     switch (amount_installment) {
@@ -95,14 +110,19 @@ export const ConnectInstallments = (props: ConnectInstallmentsProps) => {
             <ConnectInstallmentsBox>
               {index | 0 ? <ConnectInstallmentsBar /> : <></>}
               <ConnectInstallmentsContainerRadios checked={index === 0} >
-                <ConnectInstallmentsRadios
-                  checked={index === 0}
-                />
-                <ConnectInstallmentsBoxLabel>
-                  <ConnectInstallmentsLabel>
-                    {handleInstallment(item.amount)}
-                  </ConnectInstallmentsLabel>
-                </ConnectInstallmentsBoxLabel>
+                <ConnectInstallmentsContainerRadiosLabel>
+                  <ConnectInstallmentsRadios
+                    checked={index === 0}
+                  />
+                  <ConnectInstallmentsBoxLabel>
+                    <ConnectInstallmentsLabel>
+                      {handleInstallment(item.amount)}
+                    </ConnectInstallmentsLabel>
+                  </ConnectInstallmentsBoxLabel>
+                </ConnectInstallmentsContainerRadiosLabel>
+                <ConnectInstallmentsTotal>
+                  { }
+                </ConnectInstallmentsTotal>
               </ConnectInstallmentsContainerRadios>
             </ConnectInstallmentsBox>
           </>

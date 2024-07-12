@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { createContext, useState } from "react";
 import { Installment } from "../@types/installments";
 
@@ -21,7 +22,7 @@ export const PaymentProvider = ({ children }: PaymentProviderProps) => {
   const [selectedInstallment, setSelectedInstallment] = useState([] as Installment[])
   const [identifier, setIdentifier] = useState('' as string)
   const [page, setPage] = useState(1)
-  const payment_value = 30000
+  const payment_value = 30800
 
 
   return (
