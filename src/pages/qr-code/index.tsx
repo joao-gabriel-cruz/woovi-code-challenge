@@ -1,31 +1,36 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect } from "react"
 import { CommonPage } from "../../components/common/common-page"
 import { PaymentContext } from "../../context/payment-context"
 import { QRCodeService } from "./qr-code.service"
-import { BoxDivider, BoxIdentifier, BoxImage, BoxInstallments, BoxNavButtons, BoxTitleTerm, CopyButton, CopyButtonIcon, CopyButtonTitle, DateTerm, Divider, FeesText, Identifier, QRCodeImage, TextIdentifier, TitleTerm, TotalValueText, WhatIsText } from "./qr-code.styled"
-import { Button, Typography } from "@mui/material"
-import { InstallmentService } from "../../components/installments/installments.service"
-import { format_money } from "../../utils"
+import { BoxDivider, BoxIdentifier, BoxImage, BoxInstallments, BoxTitleTerm, CopyButton, CopyButtonIcon, CopyButtonTitle, DateTerm, Divider, FeesText, Identifier, QRCodeImage, TextIdentifier, TitleTerm, TotalValueText, WhatIsText } from "./qr-code.styled"
+import { Fab } from "@mui/material"
+import { countFeesAndDiscount, format_money } from "../../utils"
 import { ConnectInstallments } from "../../components/connect-installments"
-import { KeyboardArrowUpOutlined } from "@mui/icons-material"
+import { KeyboardArrowLeft, KeyboardArrowRight, KeyboardArrowUpOutlined } from "@mui/icons-material"
 
 
 export const QRCode = () => {
-  const { selectedInstallment, payment_value, setPage, identifier, setIdentifier } = useContext(PaymentContext)
-  const [qrCode, setQRcode] = useState('' as string)
+  const { selectedInstallment, payment_value, setPage, identifier, setIdentifier, setSelectedInstallment } = useContext(PaymentContext)
   const { amount, discount, fees } = selectedInstallment[selectedInstallment.length - 1]
 
-
-  const { countFeesAndDiscount } = InstallmentService()
-
-  const { getQrCode, getUUID } = QRCodeService({
-    setQRcode,
-    qrCode,
+  const { getUUID } = QRCodeService({
     setIdentifier
   })
 
+  const navigation = (page: number) => {
+    const newInstallment = [...selectedInstallment]
+    newInstallment[0].paidOut = page === 3
+    setSelectedInstallment(newInstallment)
+    setPage(page)
+  }
+
   useEffect(() => {
-    getQrCode(format_money(countFeesAndDiscount(payment_value, fees, discount) / amount))
+    const newInstallment = [...selectedInstallment]
+    newInstallment[0].paidOut = false
+    setSelectedInstallment(newInstallment)
+  }, [])
+
+  useEffect(() => {
     getUUID()
   }, [])
 
@@ -35,7 +40,9 @@ export const QRCode = () => {
       title={`João, pague a entrada de ${format_money(countFeesAndDiscount(payment_value, fees, discount) / amount)} pelo Pix`}
     >
       <BoxImage>
-        <QRCodeImage src={qrCode} alt="QRCode" />
+        <QRCodeImage
+          loading="eager"
+          src={`https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&data=${format_money(countFeesAndDiscount(payment_value, fees, discount) / amount)}`} alt="QRCode" />
       </BoxImage>
       <CopyButton>
         <CopyButtonTitle
@@ -57,7 +64,7 @@ export const QRCode = () => {
       </BoxTitleTerm>
       <BoxInstallments>
         <ConnectInstallments
-          installments={selectedInstallment}
+          installments={selectedInstallment as any}
         />
       </BoxInstallments>
       <Divider />
@@ -85,35 +92,32 @@ export const QRCode = () => {
           {identifier}
         </Identifier>
       </BoxIdentifier>
-      <BoxNavButtons>
-        <Button
-          variant='outlined'
+      <Fab
+        color='primary'
+        onClick={() => navigation(1)}
+        size="small"
+        sx={{ position: 'fixed', bottom: 20, left: 20 }}
+      >
+        <KeyboardArrowLeft
           sx={{
-            w: '49%'
+            color: 'white',
+            fontSize: 20
           }}
-          onClick={() => setPage(1)}
-        >
-          <Typography
-            variant='button'
-          >
-            Voltar
-          </Typography>
-        </Button>
-        <Button
+        />
+      </Fab>
+      {selectedInstallment.length > 1 && < Fab
+        color='primary'
+        onClick={() => navigation(3)}
+        size="small"
+        sx={{ position: 'fixed', bottom: 20, right: 20 }}
+      >
+        <KeyboardArrowRight
           sx={{
-            w: '49%'
+            color: 'white',
+            fontSize: 20
           }}
-          variant='contained'
-          onClick={() => setPage(3)}
-        >
-          <Typography
-            color="white"
-            variant='button'
-          >
-            Continuar
-          </Typography>
-        </Button>
-      </BoxNavButtons>
-    </CommonPage>
+        />
+      </Fab>}
+    </CommonPage >
   )
 }

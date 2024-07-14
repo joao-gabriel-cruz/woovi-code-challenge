@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material"
 import styles from "./common.module.css"
 import logo from '../../../public/Logo.png';
-import React from "react";
+import React, { useEffect } from "react";
 
 interface CommonPageProps {
   children?: React.ReactNode
@@ -10,11 +10,18 @@ interface CommonPageProps {
 
 export const CommonPage = (props: CommonPageProps) => {
 
+  const refScroll = React.useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const scroll = refScroll.current
+    scroll?.offsetHeight && scroll?.scrollIntoView({ behavior: 'smooth' })
+  }, [])
+
   return (
     <main
+      ref={refScroll}
       className={styles.main}
     >
-
       <Box
         mt={4}
       >

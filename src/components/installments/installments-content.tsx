@@ -1,33 +1,24 @@
-import { CardContent } from "@mui/material"
+import { styled } from "@mui/material"
 import React, { cloneElement } from "react"
 
-interface InstallmentsContentProps {
+export interface InstallmentsContentProps {
   children: any
   amount_installments?: number
   isCheck?: boolean
 }
-
-const handleTypeInstallmentsStyle = (isCheck?: boolean) => {
-  let defaultStyle: any = {}
-
-  if (isCheck) {
-    defaultStyle = {
-      width: '100%',
-      height: '0',
-      display: 'flex',
-      justifyContent: 'flex-end',
-      alignItems: 'center',
-    }
-  }
-  else {
-    defaultStyle = { width: '100%', display: "flex", padding: '0.2rem 0.5rem' }
-  }
-
-  return defaultStyle
+interface CardContentStyledProps {
+  isCheck?: boolean
 }
 
+export const CardContentStyled = styled('div') <CardContentStyledProps>`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.2rem 0.5rem;
+`
+
 export const InstallmentsContent = (props: InstallmentsContentProps) => {
-  const { children, amount_installments, isCheck } = props
+  const { children, amount_installments } = props
 
 
   const NewChildren = React.Children.map(children, (child) => {
@@ -37,10 +28,8 @@ export const InstallmentsContent = (props: InstallmentsContentProps) => {
   })
 
   return (
-    <CardContent
-      style={handleTypeInstallmentsStyle(isCheck)}
-    >
+    <CardContentStyled>
       {NewChildren}
-    </CardContent>
+    </CardContentStyled>
   )
 }

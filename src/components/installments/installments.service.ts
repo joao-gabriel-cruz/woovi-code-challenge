@@ -1,4 +1,4 @@
-import { format_money } from "../../utils"
+import { countFeesAndDiscount, format_money } from "../../utils"
 
 interface HandleTypeInstallmentsProps {
   type: "installments" | "installments-text" | "total-value" | "installments-promotion"
@@ -10,24 +10,6 @@ interface HandleTypeInstallmentsProps {
 }
 
 export const InstallmentService = () => {
-
-  const countFeesAndDiscount = (value: number, fees?: number, discount?: number) => {
-    let result = 0
-    if (fees) {
-      result = value + (value * fees)
-    }
-
-    if (discount) {
-      result = value - (value * discount)
-    }
-
-    if (fees && discount) {
-      result = value + (value * fees) - (value * discount)
-    }
-
-    return result
-  }
-
 
   const handleTypeInstallments = (props: HandleTypeInstallmentsProps) => {
     const { amount_installments, value, type, discount, fees } = props
@@ -47,6 +29,5 @@ export const InstallmentService = () => {
 
   return {
     handleTypeInstallments,
-    countFeesAndDiscount
   }
 }

@@ -2,7 +2,7 @@ import { InstallmentRequest } from "../@types/installments";
 
 export const installments_request: InstallmentRequest[] = [
   {
-    type: 'Pix',
+    type_installment: 'Pix',
     id: Math.random(),
     amount: 1,
     fees: 0,
@@ -11,7 +11,7 @@ export const installments_request: InstallmentRequest[] = [
     message: '🤑 R$ 300,00 de volta no seu Pix na hora'
   },
   {
-    type: 'Pix Parcelado',
+    type_installment: 'Pix Parcelado',
     id: Math.random(),
     amount: 2,
     fees: 0.2,

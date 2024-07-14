@@ -1,6 +1,6 @@
 import { Typography } from "@mui/material"
 
-interface InstallmentsLabelProps {
+export interface InstallmentsLabelProps {
   text?: string
 }
 

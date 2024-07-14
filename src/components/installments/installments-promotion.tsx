@@ -13,7 +13,7 @@ const InstallmentsPromotionContainer = styled('div')({
 })
 
 
-interface InstallmentsPromotionProps {
+export interface InstallmentsPromotionProps {
   text?: string
 }
 

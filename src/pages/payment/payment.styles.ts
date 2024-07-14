@@ -24,7 +24,7 @@ export const ButtonPayment = styled('button')`
   border: none;
   border-radius: 5px;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 500;
   margin: 1rem;
 
 `

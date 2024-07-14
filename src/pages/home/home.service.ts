@@ -13,7 +13,7 @@ export const HomeService = (props: HomeServiceProps) => {
   const { setInstallments, installments, setSelectedInstallment, selectedInstallment } = props
 
   const getInstallments = async () => {
-    const response = installments_request.map((installment) => ({ ...installment, checked: false }))
+    const response = installments_request.map((installment) => ({ ...installment, checked: false, paidOut: false }))
     setInstallments(response)
   }
 
@@ -34,14 +34,16 @@ export const HomeService = (props: HomeServiceProps) => {
   }
 
   const verifyInstallments = () => {
+    if (selectedInstallment.length === 0) return
     const installment_selected = selectedInstallment[selectedInstallment.length - 1]
-    setInstallments(installments.map((item) => {
-      if (installment_selected.id === item.id) {
+    const result = installments_request.map((item) => {
+      if (installment_selected.amount === item.amount) {
         return { ...item, checked: true }
       } else {
         return { ...item, checked: false }
       }
-    }))
+    })
+    setInstallments(result)
   }
 
   return {

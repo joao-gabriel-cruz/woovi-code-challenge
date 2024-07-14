@@ -16,12 +16,12 @@ import {
   WhatIsText
 } from "../qr-code/qr-code.styled"
 
-import { InstallmentService } from "../../components/installments/installments.service"
-import { format_money, mask } from "../../utils"
+import { countFeesAndDiscount, format_money, mask } from "../../utils"
 import { ConnectInstallments } from "../../components/connect-installments"
-import { KeyboardArrowUpOutlined } from "@mui/icons-material"
+import { KeyboardArrowLeft, KeyboardArrowUpOutlined } from "@mui/icons-material"
 import { ButtonPayment, FormContainer, FormDivider } from "./payment.styles"
-import { Button, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material"
+import { Fab, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material"
+import { installments_request } from "../../fake/instalments"
 
 
 export const Payment = () => {
@@ -30,14 +30,13 @@ export const Payment = () => {
   const [formDate, setFormDate] = useState({
     name: '',
     cpf: '',
-    card_name: '',
+    card_number: '',
     card_date: '',
     card_cvv: ''
   })
 
-  const { discount, fees } = selectedInstallment[selectedInstallment.length - 1]
-
-  const { countFeesAndDiscount } = InstallmentService()
+  const { discount, fees, amount } = selectedInstallment[selectedInstallment.length - 1]
+  const new_value_installment = payment_value - (payment_value / amount)
 
   return (
     <CommonPage
@@ -50,6 +49,7 @@ export const Payment = () => {
           type='text'
           onChange={(e) => setFormDate({ ...formDate, name: e.target.value })}
           label='Nome completo'
+          value={formDate.name}
           placeholder='Ex: João da Silva'
         />
         <TextField
@@ -57,6 +57,7 @@ export const Payment = () => {
           variant='outlined'
           type='text'
           label='CPF'
+          value={formDate.cpf}
           onChange={(e) => setFormDate({
             ...formDate, cpf: mask({
               value: e.target.value,
@@ -70,11 +71,12 @@ export const Payment = () => {
           sx={{ width: '100%', marginBottom: '1rem' }}
           variant='outlined'
           type='text'
-          label='Nome do cartão'
+          label='Numero do cartão'
+          value={formDate.card_number}
           onChange={(e) => setFormDate({
-            ...formDate, cpf: mask({
+            ...formDate, card_number: mask({
               value: e.target.value,
-              mask: "cpf"
+              mask: "credit-card"
             })
           })}
           placeholder='Ex: 000.000.000-00'
@@ -85,6 +87,14 @@ export const Payment = () => {
             variant='outlined'
             type='text'
             label='Vencimento'
+            value={formDate.card_date}
+            onChange={(e) => setFormDate({
+              ...formDate, card_date: mask({
+                value: e.target.value,
+                mask: "validate-card"
+              })
+            })
+            }
             placeholder='Ex: 00/00'
           />
           <TextField
@@ -93,6 +103,15 @@ export const Payment = () => {
             type='text'
             label='CVV'
             placeholder='Ex: 000'
+            value={formDate.card_cvv}
+            onChange={(e) => setFormDate({
+              ...formDate, card_cvv: mask({
+                value: e.target.value,
+                mask: "cvv"
+              })
+            })
+            }
+
           />
         </FormDivider>
         <FormControl fullWidth>
@@ -103,16 +122,12 @@ export const Payment = () => {
             labelId="demo-simple-select-label"
             id="demo-simple-select"
             label="Parcelas"
-            defaultValue={format_money(countFeesAndDiscount(payment_value, fees, discount))}
-            onChange={() => { }}
+            defaultValue={selectedInstallment[0].amount}
           >
-            {
-              selectedInstallment.map((item) => (
-                <MenuItem key={item.id} value={format_money(countFeesAndDiscount(payment_value, fees, discount) / item.amount)}>
-                  {item.amount}x de {format_money(countFeesAndDiscount(payment_value, fees, discount) / item.amount)}
-                </MenuItem>
-              ))
-            }
+
+            <MenuItem key={installments_request[0].id} value={installments_request[0].amount}>
+              {installments_request[0].amount}x de {format_money(countFeesAndDiscount(new_value_installment, fees, discount) / installments_request[0].amount)}
+            </MenuItem>
           </Select>
         </FormControl>
         <ButtonPayment>
@@ -129,7 +144,7 @@ export const Payment = () => {
       </BoxTitleTerm>
       <BoxInstallments>
         <ConnectInstallments
-          installments={selectedInstallment}
+          installments={selectedInstallment as any}
         />
       </BoxInstallments>
       <Divider />
@@ -138,7 +153,7 @@ export const Payment = () => {
           CET: 0,5%
         </FeesText>
         <TotalValueText>
-          Total: {format_money(countFeesAndDiscount(payment_value, fees, discount))}
+          Total: {format_money(countFeesAndDiscount(new_value_installment, fees, discount))}
         </TotalValueText>
       </BoxDivider>
       <Divider />
@@ -157,19 +172,19 @@ export const Payment = () => {
           {identifier}
         </Identifier>
       </BoxIdentifier>
-      <Button
-        variant='outlined'
-        sx={{
-          w: '49%'
-        }}
-        onClick={() => setPage(1)}
+      <Fab
+        color='primary'
+        onClick={() => setPage(2)}
+        size="small"
+        sx={{ position: 'fixed', bottom: 20, left: 20 }}
       >
-        <Typography
-          variant='button'
-        >
-          Voltar
-        </Typography>
-      </Button>
+        <KeyboardArrowLeft
+          sx={{
+            color: 'white',
+            fontSize: 20
+          }}
+        />
+      </Fab>
     </CommonPage>
   )
 }

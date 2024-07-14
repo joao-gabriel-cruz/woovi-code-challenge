@@ -3,7 +3,7 @@ import { InstallmentService } from "./installments.service";
 import { Installment } from "../../@types/installments";
 import { theme } from "../../styles/theme";
 
-interface InstallmentsTextProps {
+export interface InstallmentsTextProps {
   item: Installment
   amount_installments?: number
   value: number

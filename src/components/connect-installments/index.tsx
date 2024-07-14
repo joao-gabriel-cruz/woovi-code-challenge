@@ -1,96 +1,23 @@
-import React, { useContext } from "react"
+import { useContext, useEffect, useState } from "react"
 import { Installment } from "../../@types/installments"
-import { styled } from "@mui/material"
 import { PaymentContext } from "../../context/payment-context"
+import { ConnectInstallmentsBar, ConnectInstallmentsBox, ConnectInstallmentsBoxLabel, ConnectInstallmentsContainer, ConnectInstallmentsContainerRadios, ConnectInstallmentsContainerRadiosLabel, ConnectInstallmentsLabel, ConnectInstallmentsRadios, ConnectInstallmentsTotal } from "./connect-installments.styled"
+import { CheckOutlined } from "@mui/icons-material"
+
+type InstallmentType = Installment & { type?: "next-payment" | "paidOut" | "opened" }
 
 interface ConnectInstallmentsProps {
-  installments: Installment[]
+  installments: InstallmentType[]
 }
-
-const ConnectInstallmentsContainer = styled('section')`
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-`
-const ConnectInstallmentsBox = styled('div')`
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-`
-
-interface ConnectInstallmentsRadiosProps {
-  checked: boolean
-}
-
-const ConnectInstallmentsContainerRadios = styled('div') <ConnectInstallmentsRadiosProps>`
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    /* background-color: ${({ checked, theme }) => checked ? theme.palette.primary.main : "#fff"}; */
-    /* border-color: ${({ theme, checked }) => checked ? theme.palette.primary.main : "#ccc"}; */
-    border-radius: 5rem;
-    margin-top: 1rem;
-    `
-
-const ConnectInstallmentsRadios = styled('div') <ConnectInstallmentsRadiosProps>`
-    padding: 0.5rem;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    /* background-color: ${({ checked, theme }) => checked ? theme.palette.primary.main : "#ccc"}; */
-    border-color: ${({ theme, checked }) => checked ? theme.palette.primary.main : "#ccc"};
-    border-radius: 5rem;
-    border-width: 2px;
-    border-style: solid;
-`
-
-export const ConnectInstallmentsBar = styled('div')`
-    width: 0.15rem;
-    height: 1.2rem;
-    background-color: #ccc;
-    border-radius: 5rem;
-    position: absolute;
-    margin-top: -1.2rem;
-    margin-left: 0.54rem;
-`
-export const ConnectInstallmentsBoxLabel = styled('div')`
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    margin-left: 0.5rem;
-`
-
-export const ConnectInstallmentsLabel = styled('span')`
-    font-size: 0.8rem;
-    font-weight: 600;
-    font-family: 'Nunito' sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-`
-
-export const ConnectInstallmentsContainerRadiosLabel = styled('div')`
-  display: flex;
-`
-
-export const ConnectInstallmentsTotal = styled('span')`
-    font-size: 0.8rem;
-    font-weight: 600;
-    font-family: 'Nunito' sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 0.5rem;
-`
 
 export const ConnectInstallments = (props: ConnectInstallmentsProps) => {
   const { installments } = props
-  const { payment_value } = useContext(PaymentContext)
+  const { payment_value_formatted, page } = useContext(PaymentContext)
+  const [newInstallments, setNewInstallments] = useState<InstallmentType[]>(installments)
+
+  useEffect(() => {
+    setNewInstallments(installments)
+  }, [installments])
 
   const handleInstallment = (amount_installment: number) => {
     switch (amount_installment) {
@@ -98,22 +25,53 @@ export const ConnectInstallments = (props: ConnectInstallmentsProps) => {
         return "1 Primeira parcela no Pix"
       default:
         return amount_installment + "ª no Cartão"
-
     }
   }
+
+  const handleType = () => {
+    const result = installments.map((item, index) => {
+      if (item.paidOut && installments.length > 1) {
+        item.type = "paidOut"
+      } else if (!item.paidOut) {
+        if (installments[index - 1]?.paidOut || index === 0) {
+          item.type = "next-payment"
+        } else {
+          item.type = "opened"
+        }
+      }
+      return item
+    })
+
+    setNewInstallments(result)
+  }
+
+  useEffect(() => {
+    handleType()
+  }, [page])
 
   return (
     <ConnectInstallmentsContainer>
       {
-        installments.map((item, index) => (
+        newInstallments.map((item, index) => (
           <>
-            <ConnectInstallmentsBox>
+            <ConnectInstallmentsBox
+              key={item.amount}
+            >
               {index | 0 ? <ConnectInstallmentsBar /> : <></>}
-              <ConnectInstallmentsContainerRadios checked={index === 0} >
+              <ConnectInstallmentsContainerRadios >
                 <ConnectInstallmentsContainerRadiosLabel>
                   <ConnectInstallmentsRadios
-                    checked={index === 0}
-                  />
+                    type={item.type || "opened"}
+                  >
+                    {
+                      item.type === "paidOut" && <CheckOutlined
+                        style={{
+                          color: "#fff",
+                          fontSize: "1rem"
+                        }}
+                      />
+                    }
+                  </ConnectInstallmentsRadios>
                   <ConnectInstallmentsBoxLabel>
                     <ConnectInstallmentsLabel>
                       {handleInstallment(item.amount)}
@@ -121,7 +79,7 @@ export const ConnectInstallments = (props: ConnectInstallmentsProps) => {
                   </ConnectInstallmentsBoxLabel>
                 </ConnectInstallmentsContainerRadiosLabel>
                 <ConnectInstallmentsTotal>
-                  { }
+                  {payment_value_formatted}
                 </ConnectInstallmentsTotal>
               </ConnectInstallmentsContainerRadios>
             </ConnectInstallmentsBox>
