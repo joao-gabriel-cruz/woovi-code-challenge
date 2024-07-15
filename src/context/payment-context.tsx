@@ -28,6 +28,15 @@ export const PaymentProvider = ({ children }: PaymentProviderProps) => {
 
   const [payment_value_formatted, setPaymentValueFormatted] = useState('')
 
+  const getUUID = async () => {
+    const data = await fetch('https://www.uuidgenerator.net/api/version4')
+    setIdentifier(await data.text())
+  }
+
+  useEffect(() => {
+    getUUID()
+  }, [])
+
   useEffect(() => {
     if (selectedInstallment.length === 0) return
     const { discount, fees, amount } = selectedInstallment[selectedInstallment.length - 1]

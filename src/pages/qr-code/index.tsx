@@ -1,7 +1,6 @@
 import { useContext, useEffect } from "react"
 import { CommonPage } from "../../components/common/common-page"
 import { PaymentContext } from "../../context/payment-context"
-import { QRCodeService } from "./qr-code.service"
 import { BoxDivider, BoxIdentifier, BoxImage, BoxInstallments, BoxTitleTerm, CopyButton, CopyButtonIcon, CopyButtonTitle, DateTerm, Divider, FeesText, Identifier, QRCodeImage, TextIdentifier, TitleTerm, TotalValueText, WhatIsText } from "./qr-code.styled"
 import { Fab } from "@mui/material"
 import { countFeesAndDiscount, format_money } from "../../utils"
@@ -10,12 +9,9 @@ import { KeyboardArrowLeft, KeyboardArrowRight, KeyboardArrowUpOutlined } from "
 
 
 export const QRCode = () => {
-  const { selectedInstallment, payment_value, setPage, identifier, setIdentifier, setSelectedInstallment } = useContext(PaymentContext)
+  const { selectedInstallment, payment_value, setPage, identifier, setSelectedInstallment } = useContext(PaymentContext)
   const { amount, discount, fees } = selectedInstallment[selectedInstallment.length - 1]
 
-  const { getUUID } = QRCodeService({
-    setIdentifier
-  })
 
   const navigation = (page: number) => {
     const newInstallment = [...selectedInstallment]
@@ -30,9 +26,6 @@ export const QRCode = () => {
     setSelectedInstallment(newInstallment)
   }, [])
 
-  useEffect(() => {
-    getUUID()
-  }, [])
 
 
   return (
