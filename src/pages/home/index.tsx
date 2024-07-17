@@ -8,9 +8,10 @@ import { CommonPage } from '../../components/common/common-page';
 import { PaymentContext } from '../../context/payment-context';
 import { Fab } from '@mui/material';
 import { ContainerInstallments, ContainerSkeleton } from './home.styles';
+import { Link } from 'react-router-dom';
 
 export const Home = () => {
-  const { setSelectedInstallment, payment_value, selectedInstallment, setPage } = useContext(PaymentContext)
+  const { setSelectedInstallment, payment_value, selectedInstallment } = useContext(PaymentContext)
   const [installments, setInstallments] = useState([] as Installment[])
 
 
@@ -104,21 +105,23 @@ export const Home = () => {
             ))
         }
         {
-          selectedInstallment?.length ? <Fab
-            color='primary'
-            onClick={() => {
-              setPage(2)
-            }}
-            size='small'
-            sx={{ position: 'fixed', bottom: 20, right: 20 }}
-          >
-            <KeyboardArrowRight
-              sx={{
-                color: 'white',
-                fontSize: 20
-              }}
-            />
-          </Fab> : <></>
+          selectedInstallment?.length ?
+            <Link to="/qr-code">
+              <Fab
+                color='primary'
+
+                size='small'
+                sx={{ position: 'fixed', bottom: 20, right: 20 }}
+              >
+                <KeyboardArrowRight
+                  sx={{
+                    color: 'white',
+                    fontSize: 20
+                  }}
+                />
+              </Fab>
+            </Link>
+            : <></>
         }
       </ContainerInstallments>
     </CommonPage>

@@ -6,18 +6,21 @@ import { Fab } from "@mui/material"
 import { countFeesAndDiscount, format_money } from "../../utils"
 import { ConnectInstallments } from "../../components/connect-installments"
 import { KeyboardArrowLeft, KeyboardArrowRight, KeyboardArrowUpOutlined } from "@mui/icons-material"
+import { useNavigate } from "react-router-dom"
 
 
 export const QRCode = () => {
-  const { selectedInstallment, payment_value, setPage, identifier, setSelectedInstallment } = useContext(PaymentContext)
+  const { selectedInstallment, payment_value, identifier, setSelectedInstallment } = useContext(PaymentContext)
   const { amount, discount, fees } = selectedInstallment[selectedInstallment.length - 1]
 
 
-  const navigation = (page: number) => {
+  const navigate = useNavigate()
+
+  const navigation = (page: "/" | "/payment-rest") => {
     const newInstallment = [...selectedInstallment]
-    newInstallment[0].paidOut = page === 3
+    newInstallment[0].paidOut = page === "/payment-rest"
     setSelectedInstallment(newInstallment)
-    setPage(page)
+    navigate(page)
   }
 
   useEffect(() => {
@@ -87,7 +90,7 @@ export const QRCode = () => {
       </BoxIdentifier>
       <Fab
         color='primary'
-        onClick={() => navigation(1)}
+        onClick={() => navigation("/")}
         size="small"
         sx={{ position: 'fixed', bottom: 20, left: 20 }}
       >
@@ -98,19 +101,20 @@ export const QRCode = () => {
           }}
         />
       </Fab>
-      {selectedInstallment.length > 1 && < Fab
-        color='primary'
-        onClick={() => navigation(3)}
-        size="small"
-        sx={{ position: 'fixed', bottom: 20, right: 20 }}
-      >
-        <KeyboardArrowRight
-          sx={{
-            color: 'white',
-            fontSize: 20
-          }}
-        />
-      </Fab>}
+      {selectedInstallment.length > 1 &&
+        < Fab
+          onClick={() => navigation("/payment-rest")}
+          color='primary'
+          size="small"
+          sx={{ position: 'fixed', bottom: 20, right: 20 }}
+        >
+          <KeyboardArrowRight
+            sx={{
+              color: 'white',
+              fontSize: 20
+            }}
+          />
+        </Fab>}
     </CommonPage >
   )
 }

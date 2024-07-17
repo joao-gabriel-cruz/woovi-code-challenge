@@ -28,3 +28,14 @@ export const ButtonPayment = styled('button')`
   margin: 1rem;
 
 `
+
+export const ConfirmationPayment = styled('div')`
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f5f5;
+  padding: 1rem;
+  border-radius: 5px;
+`
