@@ -58,6 +58,7 @@ export const Payment = () => {
       setErrorValidation({})
     } catch (error) {
       setErrorValidation(error)
+      throw error
     }
   }
 
