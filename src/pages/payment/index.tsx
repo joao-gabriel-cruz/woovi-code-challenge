@@ -23,10 +23,11 @@ import { ButtonPayment, ConfirmationPayment, FormContainer, FormDivider } from "
 import { Fab, FormControl, InputLabel, MenuItem, Modal, Select, TextField } from "@mui/material"
 import { installments_request } from "../../fake/instalments"
 import { object, string } from "yup"
+import { Link } from "react-router-dom"
 
 
 export const Payment = () => {
-  const { selectedInstallment, identifier, payment_value, setPage } = useContext(PaymentContext)
+  const { selectedInstallment, identifier, payment_value } = useContext(PaymentContext)
   const [errorValidation, setErrorValidation] = useState({} as any)
   const [open, setOpen] = useState(false)
 
@@ -136,7 +137,6 @@ export const Payment = () => {
           value={formDate.card_number}
           onChange={(e) => {
             validate_form()
-
             setFormDate({
               ...formDate, card_number: mask({
                 value: e.target.value,
@@ -157,7 +157,6 @@ export const Payment = () => {
             value={formDate.card_date}
             onChange={(e) => {
               validate_form()
-
               setFormDate({
                 ...formDate, card_date: mask({
                   value: e.target.value,
@@ -250,19 +249,22 @@ export const Payment = () => {
           {identifier}
         </Identifier>
       </BoxIdentifier>
-      <Fab
-        color='primary'
-        onClick={() => setPage(2)}
-        size="small"
-        sx={{ position: 'fixed', bottom: 20, left: 20 }}
+      <Link
+        to="/qr-code"
       >
-        <KeyboardArrowLeft
-          sx={{
-            color: 'white',
-            fontSize: 20
-          }}
-        />
-      </Fab>
+        <Fab
+          color='primary'
+          size="small"
+          sx={{ position: 'fixed', bottom: 20, left: 20 }}
+        >
+          <KeyboardArrowLeft
+            sx={{
+              color: 'white',
+              fontSize: 20
+            }}
+          />
+        </Fab>
+      </Link>
     </CommonPage>
   )
 }

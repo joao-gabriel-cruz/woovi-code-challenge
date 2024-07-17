@@ -14,8 +14,6 @@ export const Home = () => {
   const { setSelectedInstallment, payment_value, selectedInstallment } = useContext(PaymentContext)
   const [installments, setInstallments] = useState([] as Installment[])
 
-
-
   const { getInstallments, handleCheck, verifyInstallments } = HomeService({
     setInstallments,
     installments,
@@ -27,9 +25,6 @@ export const Home = () => {
     getInstallments()
     verifyInstallments()
   }, [])
-
-
-
 
   return (
     <CommonPage
@@ -109,7 +104,6 @@ export const Home = () => {
             <Link to="/qr-code">
               <Fab
                 color='primary'
-
                 size='small'
                 sx={{ position: 'fixed', bottom: 20, right: 20 }}
               >
@@ -120,8 +114,7 @@ export const Home = () => {
                   }}
                 />
               </Fab>
-            </Link>
-            : <></>
+            </Link> : <></>
         }
       </ContainerInstallments>
     </CommonPage>
