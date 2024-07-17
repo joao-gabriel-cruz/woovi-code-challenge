@@ -47,7 +47,7 @@ export const QRCode = () => {
           Clique para copiar QR CODE
         </CopyButtonTitle>
         <CopyButtonIcon
-          src="../../../public/copy-icon.png"
+          src="copy-icon.png"
         />
       </CopyButton>
       <BoxTitleTerm>
